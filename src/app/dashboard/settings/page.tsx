@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { User, Bell, Shield, Palette } from 'lucide-react'
 
@@ -12,6 +13,10 @@ import { useAuthStore } from '@/stores/auth-store'
 
 export default function SettingsPage() {
   const { user } = useAuthStore()
+  const [episodeComplete, setEpisodeComplete] = useState(true)
+  const [weeklyDigest, setWeeklyDigest] = useState(false)
+  const [productUpdates, setProductUpdates] = useState(true)
+  const [animations, setAnimations] = useState(true)
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -79,7 +84,7 @@ export default function SettingsPage() {
                   Get notified when your podcast is ready
                 </p>
               </div>
-              <Switch defaultChecked />
+              <Switch checked={episodeComplete} onCheckedChange={setEpisodeComplete} />
             </div>
             <div className="flex items-center justify-between">
               <div>
@@ -88,7 +93,7 @@ export default function SettingsPage() {
                   Receive a summary of your podcast stats
                 </p>
               </div>
-              <Switch />
+              <Switch checked={weeklyDigest} onCheckedChange={setWeeklyDigest} />
             </div>
             <div className="flex items-center justify-between">
               <div>
@@ -97,7 +102,7 @@ export default function SettingsPage() {
                   Stay informed about new features
                 </p>
               </div>
-              <Switch defaultChecked />
+              <Switch checked={productUpdates} onCheckedChange={setProductUpdates} />
             </div>
           </CardContent>
         </Card>
@@ -136,7 +141,7 @@ export default function SettingsPage() {
                   Enable smooth animations
                 </p>
               </div>
-              <Switch defaultChecked />
+              <Switch checked={animations} onCheckedChange={setAnimations} />
             </div>
           </CardContent>
         </Card>
