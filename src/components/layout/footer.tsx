@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { Mic2, Github, Twitter } from 'lucide-react'
+import Image from 'next/image'
+import { Github, Twitter } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -10,7 +11,13 @@ export function Footer() {
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
               <div className="relative">
-                <Mic2 className="h-8 w-8 text-neon-cyan" />
+                <Image 
+                  src="/microphone.svg" 
+                  alt="Nerva Logo" 
+                  width={32} 
+                  height={32}
+                  className="h-8 w-8"
+                />
                 <div className="absolute inset-0 blur-sm bg-neon-cyan/50 rounded-full" />
               </div>
               <span className="text-xl font-bold gradient-text">Nerva</span>

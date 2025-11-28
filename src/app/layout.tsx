@@ -6,8 +6,16 @@ import { Toaster } from '@/components/ui/toaster'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI Podcast Generator',
+  title: 'Nerva - AI Podcast Generator',
   description: 'Transform any content into engaging AI-powered podcasts',
+  icons: {
+    icon: [
+      { url: '/microphone.png', type: 'image/png' },
+      { url: '/microphone.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/microphone.png',
+    apple: '/microphone.png',
+  },
 }
 
 export default function RootLayout({

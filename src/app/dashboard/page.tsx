@@ -3,7 +3,8 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Plus, Mic2, Clock, CheckCircle, AlertCircle } from 'lucide-react'
+import Image from 'next/image'
+import { Plus, Clock, CheckCircle, AlertCircle } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -62,7 +63,13 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium text-gray-400">
               Total Episodes
             </CardTitle>
-            <Mic2 className="h-4 w-4 text-neon-cyan" />
+            <Image 
+              src="/microphone.svg" 
+              alt="Episodes" 
+              width={16} 
+              height={16}
+              className="h-4 w-4"
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">{stats.total}</div>
@@ -135,7 +142,13 @@ export default function DashboardPage() {
         ) : episodes.length === 0 ? (
           <Card className="neon-border bg-black/50">
             <CardContent className="p-12 text-center">
-              <Mic2 className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+              <Image 
+                src="/microphone.svg" 
+                alt="No episodes" 
+                width={48} 
+                height={48}
+                className="h-12 w-12 mx-auto mb-4 opacity-60"
+              />
               <h3 className="text-lg font-medium text-white mb-2">
                 No episodes yet
               </h3>

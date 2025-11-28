@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Play, Sparkles, Mic2, Wand2 } from 'lucide-react'
+import Image from 'next/image'
+import { Play, Sparkles, Wand2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
@@ -110,7 +111,13 @@ export function HeroSection() {
                 {/* Audio visualization mockup */}
                 <div className="flex items-center space-x-4 mb-6">
                   <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-pink flex items-center justify-center">
-                    <Mic2 className="h-8 w-8 text-black" />
+                    <Image 
+                      src="/microphone.svg" 
+                      alt="Podcast" 
+                      width={32} 
+                      height={32}
+                      className="h-8 w-8"
+                    />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold text-white">The Future of AI Technology</h3>

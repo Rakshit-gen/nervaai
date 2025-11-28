@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
-  Mic2,
   LayoutDashboard,
   Plus,
   Library,
@@ -30,7 +30,13 @@ export function DashboardSidebar() {
       <div className="h-16 flex items-center px-6 border-b border-white/10">
         <Link href="/dashboard" className="flex items-center space-x-2">
           <div className="relative">
-            <Mic2 className="h-8 w-8 text-neon-cyan" />
+            <Image 
+              src="/microphone.svg" 
+              alt="Nerva Logo" 
+              width={32} 
+              height={32}
+              className="h-8 w-8"
+            />
             <div className="absolute inset-0 blur-sm bg-neon-cyan/50 rounded-full" />
           </div>
           <span className="text-xl font-bold gradient-text">Nerva</span>
