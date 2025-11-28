@@ -50,9 +50,12 @@ export function AudioPlayer({ audioUrl, title, coverUrl }: AudioPlayerProps) {
       try {
         const headers = api.getHeaders()
         // Remove Content-Type for binary audio
-        const audioHeaders: HeadersInit = {}
-        if (headers['X-User-ID']) audioHeaders['X-User-ID'] = headers['X-User-ID'] as string
-        if (headers['Authorization']) audioHeaders['Authorization'] = headers['Authorization'] as string
+        const audioHeaders: Record<string, string> = {}
+        if (headers && typeof headers === 'object' && !Array.isArray(headers) && !(headers instanceof Headers)) {
+          const headerObj = headers as Record<string, string>
+          if (headerObj['X-User-ID']) audioHeaders['X-User-ID'] = headerObj['X-User-ID']
+          if (headerObj['Authorization']) audioHeaders['Authorization'] = headerObj['Authorization']
+        }
 
         const response = await fetch(audioUrl, {
           headers: audioHeaders,
