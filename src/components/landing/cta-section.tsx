@@ -51,27 +51,6 @@ export function CTASection() {
           </div>
         </motion.div>
 
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-16 grid grid-cols-3 gap-8"
-        >
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold gradient-text">10K+</div>
-            <div className="text-sm text-gray-400 mt-1">Podcasts Created</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold gradient-text">5K+</div>
-            <div className="text-sm text-gray-400 mt-1">Happy Creators</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold gradient-text">100%</div>
-            <div className="text-sm text-gray-400 mt-1">Free to Start</div>
-          </div>
-        </motion.div>
       </div>
     </section>
   )
