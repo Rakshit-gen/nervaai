@@ -104,10 +104,14 @@ export const useAuthStore = create<AuthState>()(
       },
 
       signInWithGoogle: async () => {
+        // Use environment variable if available, otherwise use current origin
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
+        const redirectTo = `${appUrl}/dashboard`
+        
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
-            redirectTo: `${window.location.origin}/dashboard`,
+            redirectTo,
           },
         })
         
