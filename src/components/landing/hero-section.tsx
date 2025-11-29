@@ -89,12 +89,6 @@ export function HeroSection() {
               Generate Your First Podcast
             </Button>
           </Link>
-          <Link href="#demo">
-            <Button variant="outline" size="xl">
-              <Play className="mr-2 h-5 w-5" />
-              Watch Demo
-            </Button>
-          </Link>
         </motion.div>
 
         {/* Floating preview cards */}
