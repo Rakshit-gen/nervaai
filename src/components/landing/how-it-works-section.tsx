@@ -45,11 +45,11 @@ export function HowItWorksSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4">
             <span className="text-white">How It</span>{' '}
             <span className="gradient-text">Works</span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto px-4">
             From content to podcast in four simple steps.
           </p>
         </motion.div>

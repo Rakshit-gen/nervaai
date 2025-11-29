@@ -283,18 +283,18 @@ export default function EpisodeDetailPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-start sm:items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
           <Link href="/dashboard/episodes">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="flex-shrink-0">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-white">{currentEpisode.title}</h1>
-            <div className="flex items-center space-x-3 mt-1">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-white truncate">{currentEpisode.title}</h1>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1">
               <span
                 className={`px-2 py-0.5 text-xs rounded-full border ${getStatusBgColor(
                   currentEpisode.status
@@ -303,7 +303,7 @@ export default function EpisodeDetailPage() {
                 {currentEpisode.status}
               </span>
               {currentEpisode.created_at && (
-                <span className="text-sm text-gray-500 flex items-center">
+                <span className="text-xs sm:text-sm text-gray-500 flex items-center">
                   <Calendar className="h-3 w-3 mr-1" />
                   {formatDate(currentEpisode.created_at)}
                 </span>
@@ -312,7 +312,7 @@ export default function EpisodeDetailPage() {
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-end gap-2 flex-shrink-0">
           {currentEpisode.status === 'completed' && (
             <>
               <Button 
@@ -320,22 +320,42 @@ export default function EpisodeDetailPage() {
                 size="sm"
                 onClick={handleShare}
                 disabled={isSharing}
+                className="hidden sm:flex"
               >
                 <Share2 className="h-4 w-4 mr-2" />
                 {isSharing ? 'Sharing...' : 'Share'}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="icon"
+                onClick={handleShare}
+                disabled={isSharing}
+                className="sm:hidden"
+              >
+                <Share2 className="h-4 w-4" />
               </Button>
               <Button 
                 variant="neon" 
                 size="sm"
                 onClick={handleDownload}
                 disabled={isDownloading}
+                className="hidden sm:flex"
               >
                 <Download className="h-4 w-4 mr-2" />
                 {isDownloading ? 'Downloading...' : 'Download'}
               </Button>
+              <Button 
+                variant="neon" 
+                size="icon"
+                onClick={handleDownload}
+                disabled={isDownloading}
+                className="sm:hidden"
+              >
+                <Download className="h-4 w-4" />
+              </Button>
             </>
           )}
-          <Button variant="ghost" size="sm" className="text-red-400" onClick={handleDelete}>
+          <Button variant="ghost" size="icon" className="text-red-400" onClick={handleDelete}>
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -394,16 +414,16 @@ export default function EpisodeDetailPage() {
 
       {/* Details tabs */}
       <Tabs defaultValue="details" className="w-full">
-        <TabsList className="w-full justify-start">
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="transcript" disabled={!transcript}>
+        <TabsList className="w-full justify-start flex-wrap">
+          <TabsTrigger value="details" className="text-xs sm:text-sm">Details</TabsTrigger>
+          <TabsTrigger value="transcript" disabled={!transcript} className="text-xs sm:text-sm">
             Transcript
           </TabsTrigger>
-          <TabsTrigger value="personas">Personas</TabsTrigger>
+          <TabsTrigger value="personas" className="text-xs sm:text-sm">Personas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="details" className="mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Card className="neon-border bg-black/50">
               <CardHeader>
                 <CardTitle className="text-lg">Episode Info</CardTitle>
@@ -487,7 +507,7 @@ export default function EpisodeDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {currentEpisode.personas?.map((persona, index) => (
                   <div
                     key={index}

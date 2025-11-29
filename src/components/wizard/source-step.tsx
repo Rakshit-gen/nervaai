@@ -132,7 +132,7 @@ export function SourceStep({ onNext }: SourceStepProps) {
       {/* Source type selection */}
       <div className="space-y-3">
         <Label>Content Source *</Label>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
           {sourceTypes.map((type) => (
             <Card
               key={type.id}

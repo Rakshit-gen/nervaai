@@ -38,25 +38,25 @@ export function DemoSection() {
           transition={{ duration: 0.5 }}
           className="max-w-4xl mx-auto"
         >
-          <div className="neon-border rounded-2xl p-8 bg-black/80">
+          <div className="neon-border rounded-2xl p-4 sm:p-8 bg-black/80">
             {/* Demo player header */}
-            <div className="flex items-start justify-between mb-8">
-              <div className="flex items-center space-x-4">
-                <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-neon-cyan via-neon-purple to-neon-pink p-0.5">
+            <div className="flex items-start justify-between mb-6 sm:mb-8">
+              <div className="flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-neon-cyan via-neon-purple to-neon-pink p-0.5 flex-shrink-0">
                   <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
-                    <span className="text-3xl">🎙️</span>
+                    <span className="text-2xl sm:text-3xl">🎙️</span>
                   </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white">
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-base sm:text-xl font-semibold text-white truncate">
                     The Rise of Artificial Intelligence
                   </h3>
-                  <p className="text-gray-400 text-sm mt-1">
+                  <p className="text-gray-400 text-xs sm:text-sm mt-1">
                     A conversation between Alex & Sam
                   </p>
-                  <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 text-xs text-gray-500">
                     <span>12:34 duration</span>
-                    <span>•</span>
+                    <span className="hidden sm:inline">•</span>
                     <span>Generated from article</span>
                   </div>
                 </div>
@@ -64,8 +64,8 @@ export function DemoSection() {
             </div>
 
             {/* Waveform visualization */}
-            <div className="relative mb-6">
-              <div className="h-24 flex items-center justify-center space-x-0.5 overflow-hidden">
+            <div className="relative mb-4 sm:mb-6">
+              <div className="h-16 sm:h-24 flex items-center justify-center space-x-0.5 overflow-hidden">
                 {Array.from({ length: 100 }).map((_, i) => (
                   <motion.div
                     key={i}
@@ -108,13 +108,13 @@ export function DemoSection() {
               <Button
                 variant="neon-solid"
                 size="lg"
-                className="rounded-full h-14 w-14"
+                className="rounded-full h-12 w-12 sm:h-14 sm:w-14"
                 onClick={() => setIsPlaying(!isPlaying)}
               >
                 {isPlaying ? (
-                  <Pause className="h-6 w-6" fill="currentColor" />
+                  <Pause className="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" />
                 ) : (
-                  <Play className="h-6 w-6 ml-1" fill="currentColor" />
+                  <Play className="h-5 w-5 sm:h-6 sm:w-6 ml-1" fill="currentColor" />
                 )}
               </Button>
             </div>

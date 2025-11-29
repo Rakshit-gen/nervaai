@@ -27,13 +27,13 @@ export function CTASection() {
             <span className="text-sm text-neon-cyan">Start Free Today</span>
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6">
             <span className="text-white">Ready to Create Your</span>
             <br />
             <span className="gradient-text">First AI Podcast?</span>
           </h2>
 
-          <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+          <p className="text-base sm:text-xl text-gray-400 mb-6 sm:mb-10 max-w-2xl mx-auto px-4">
             Join thousands of creators who are transforming their content into
             engaging podcasts with the power of AI.
           </p>

@@ -13,7 +13,7 @@ import { Footer } from '@/components/layout/footer'
 
 export default function LandingPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="relative min-h-screen overflow-x-hidden">
       <Navbar />
       <HeroSection />
       <FeaturesSection />

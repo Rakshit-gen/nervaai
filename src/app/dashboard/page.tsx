@@ -33,20 +33,21 @@ export default function DashboardPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
       >
         <div>
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}!
           </h1>
-          <p className="text-gray-400 mt-1">
+          <p className="text-sm sm:text-base text-gray-400 mt-1">
             Ready to create something amazing?
           </p>
         </div>
         <Link href="/dashboard/create">
-          <Button variant="neon-solid" size="lg">
-            <Plus className="mr-2 h-5 w-5" />
-            New Episode
+          <Button variant="neon-solid" size="default" className="sm:size-lg">
+            <Plus className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="hidden sm:inline">New Episode</span>
+            <span className="sm:hidden">New</span>
           </Button>
         </Link>
       </motion.div>
@@ -56,7 +57,7 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 md:grid-cols-4 gap-4"
+        className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
       >
         <Card className="neon-border bg-black/50">
           <CardHeader className="flex flex-row items-center justify-between pb-2">

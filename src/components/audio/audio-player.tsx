@@ -207,12 +207,12 @@ export function AudioPlayer({ audioUrl, title, coverUrl }: AudioPlayerProps) {
 
   return (
     <Card className="neon-border bg-black/80 overflow-hidden">
-      <CardContent className="p-6">
-        <div className="flex items-start space-x-6">
+      <CardContent className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
           {/* Cover art */}
           {coverUrl && (
-            <div className="flex-shrink-0">
-              <div className="w-32 h-32 rounded-lg overflow-hidden bg-gradient-to-br from-neon-cyan to-neon-pink p-0.5">
+            <div className="flex-shrink-0 mx-auto sm:mx-0">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden bg-gradient-to-br from-neon-cyan to-neon-pink p-0.5">
                 <img
                   src={coverUrl}
                   alt={title}
@@ -222,46 +222,48 @@ export function AudioPlayer({ audioUrl, title, coverUrl }: AudioPlayerProps) {
             </div>
           )}
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 w-full">
             {/* Title */}
-            <h3 className="text-lg font-semibold text-white truncate mb-1">
+            <h3 className="text-base sm:text-lg font-semibold text-white truncate mb-1">
               {title}
             </h3>
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4">
               {isReady ? formatDuration(duration) : 'Loading...'}
             </p>
 
             {/* Waveform */}
             <div
               ref={containerRef}
-              className="waveform-container mb-4 cursor-pointer"
+              className="waveform-container mb-3 sm:mb-4 cursor-pointer"
             />
 
             {/* Controls */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
+              {/* Playback controls */}
+              <div className="flex items-center justify-center sm:justify-start space-x-2">
                 {/* Skip backward */}
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => skip(-10)}
                   disabled={!isReady}
+                  className="h-9 w-9 sm:h-10 sm:w-10"
                 >
-                  <SkipBack className="h-5 w-5" />
+                  <SkipBack className="h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
 
                 {/* Play/Pause */}
                 <Button
                   variant="neon-solid"
                   size="icon"
-                  className="h-12 w-12 rounded-full"
+                  className="h-10 w-10 sm:h-12 sm:w-12 rounded-full"
                   onClick={togglePlay}
                   disabled={!isReady}
                 >
                   {isPlaying ? (
-                    <Pause className="h-5 w-5" fill="currentColor" />
+                    <Pause className="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" />
                   ) : (
-                    <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
+                    <Play className="h-4 w-4 sm:h-5 sm:w-5 ml-0.5" fill="currentColor" />
                   )}
                 </Button>
 
@@ -271,23 +273,24 @@ export function AudioPlayer({ audioUrl, title, coverUrl }: AudioPlayerProps) {
                   size="icon"
                   onClick={() => skip(10)}
                   disabled={!isReady}
+                  className="h-9 w-9 sm:h-10 sm:w-10"
                 >
-                  <SkipForward className="h-5 w-5" />
+                  <SkipForward className="h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </div>
 
-              {/* Time */}
-              <div className="text-sm text-gray-400">
+              {/* Time - show on all screens */}
+              <div className="text-xs sm:text-sm text-gray-400 text-center sm:text-left">
                 {formatDuration(currentTime)} / {formatDuration(duration)}
               </div>
 
-              {/* Volume */}
-              <div className="flex items-center space-x-2 w-32">
-                <Button variant="ghost" size="icon" onClick={toggleMute}>
+              {/* Volume - hide on very small screens, show on larger */}
+              <div className="hidden md:flex items-center space-x-2 w-32">
+                <Button variant="ghost" size="icon" onClick={toggleMute} className="h-9 w-9">
                   {isMuted || volume === 0 ? (
-                    <VolumeX className="h-5 w-5" />
+                    <VolumeX className="h-4 w-4" />
                   ) : (
-                    <Volume2 className="h-5 w-5" />
+                    <Volume2 className="h-4 w-4" />
                   )}
                 </Button>
                 <Slider
@@ -296,6 +299,17 @@ export function AudioPlayer({ audioUrl, title, coverUrl }: AudioPlayerProps) {
                   step={0.1}
                   onValueChange={handleVolumeChange}
                 />
+              </div>
+              
+              {/* Mobile volume button */}
+              <div className="md:hidden flex items-center justify-center">
+                <Button variant="ghost" size="icon" onClick={toggleMute} className="h-9 w-9">
+                  {isMuted || volume === 0 ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
+                </Button>
               </div>
             </div>
           </div>

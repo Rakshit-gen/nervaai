@@ -18,9 +18,9 @@ export function DashboardHeader() {
   const { user, signOut } = useAuthStore()
 
   return (
-    <header className="h-16 glass border-b border-white/10 flex items-center justify-between px-6">
+    <header className="hidden lg:flex h-16 glass border-b border-white/10 items-center justify-between px-4 lg:px-6">
       {/* Search */}
-      <div className="relative w-96">
+      <div className="relative w-full max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         <Input
           placeholder="Search episodes..."
@@ -29,7 +29,7 @@ export function DashboardHeader() {
       </div>
 
       {/* Right side */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2 lg:space-x-4">
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5 text-gray-400" />

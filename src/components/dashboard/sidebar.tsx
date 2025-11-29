@@ -21,11 +21,22 @@ const navigation = [
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
-export function DashboardSidebar() {
+interface DashboardSidebarProps {
+  onClose?: () => void
+}
+
+export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
   const pathname = usePathname()
 
+  const handleLinkClick = () => {
+    // Close sidebar on mobile when link is clicked
+    if (onClose && window.innerWidth < 1024) {
+      onClose()
+    }
+  }
+
   return (
-    <div className="fixed left-0 top-0 bottom-0 w-64 glass border-r border-white/10 flex flex-col">
+    <div className="h-full w-64 glass border-r border-white/10 flex flex-col bg-black/95 lg:bg-black/80">
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-white/10">
         <Link href="/dashboard" className="flex items-center space-x-2">
@@ -44,11 +55,11 @@ export function DashboardSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-2">
+      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         {navigation.map((item) => {
           const isActive = pathname === item.href
           return (
-            <Link key={item.name} href={item.href}>
+            <Link key={item.name} href={item.href} onClick={handleLinkClick}>
               <Button
                 variant="ghost"
                 className={cn(
@@ -59,7 +70,8 @@ export function DashboardSidebar() {
                 )}
               >
                 <item.icon className="mr-3 h-5 w-5" />
-                {item.name}
+                <span className="hidden sm:inline">{item.name}</span>
+                <span className="sm:hidden">{item.name.split(' ')[0]}</span>
               </Button>
             </Link>
           )

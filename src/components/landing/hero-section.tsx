@@ -20,7 +20,7 @@ export function HeroSection() {
             scale: [1, 1.2, 1],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-cyan/20 rounded-full blur-3xl"
+          className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-neon-cyan/20 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -29,7 +29,7 @@ export function HeroSection() {
             scale: [1, 1.3, 1],
           }}
           transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-pink/20 rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-neon-pink/20 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -37,7 +37,7 @@ export function HeroSection() {
             y: [0, 100, 0],
           }}
           transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/2 left-1/2 w-64 h-64 bg-neon-purple/20 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 w-48 h-48 sm:w-64 sm:h-64 bg-neon-purple/20 rounded-full blur-3xl"
         />
       </div>
 
@@ -58,7 +58,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-bold mb-6"
+          className="text-3xl sm:text-5xl md:text-7xl font-bold mb-4 sm:mb-6"
         >
           <span className="text-white">Transform Content into</span>
           <br />
@@ -70,7 +70,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-xl text-gray-400 max-w-2xl mx-auto mb-10"
+          className="text-base sm:text-xl text-gray-400 max-w-2xl mx-auto mb-6 sm:mb-10 px-4"
         >
           Upload any document, paste a YouTube link, or write your content.
           Our AI creates natural multi-voice conversations in minutes.
@@ -109,22 +109,22 @@ export function HeroSection() {
             <div className="neon-border rounded-2xl p-1 bg-gradient-to-b from-neon-cyan/20 to-transparent">
               <div className="bg-black rounded-xl p-6 sm:p-8">
                 {/* Audio visualization mockup */}
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-pink flex items-center justify-center">
+                <div className="flex items-center space-x-2 sm:space-x-4 mb-4 sm:mb-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-pink flex items-center justify-center flex-shrink-0">
                     <Image 
                       src="/microphone.svg" 
                       alt="Podcast" 
                       width={32} 
                       height={32}
-                      className="h-8 w-8"
+                      className="h-6 w-6 sm:h-8 sm:w-8"
                     />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-white">The Future of AI Technology</h3>
-                    <p className="text-sm text-gray-400">Generated from article • 12:34 duration</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm sm:text-lg font-semibold text-white truncate">The Future of AI Technology</h3>
+                    <p className="text-xs sm:text-sm text-gray-400">Generated from article • 12:34 duration</p>
                   </div>
-                  <Button variant="neon" size="icon" className="rounded-full h-12 w-12">
-                    <Play className="h-5 w-5" fill="currentColor" />
+                  <Button variant="neon" size="icon" className="rounded-full h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
+                    <Play className="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" />
                   </Button>
                 </div>
 
@@ -150,26 +150,26 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* Floating elements */}
+            {/* Floating elements - hidden on mobile */}
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -top-8 -left-8 glass rounded-xl p-4 border border-neon-cyan/30"
+              className="hidden sm:block absolute -top-8 -left-8 glass rounded-xl p-3 sm:p-4 border border-neon-cyan/30"
             >
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 rounded-full bg-neon-cyan animate-pulse" />
-                <span className="text-sm text-white">Alex (Host)</span>
+                <span className="text-xs sm:text-sm text-white">Alex (Host)</span>
               </div>
             </motion.div>
 
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-              className="absolute -bottom-8 -right-8 glass rounded-xl p-4 border border-neon-pink/30"
+              className="hidden sm:block absolute -bottom-8 -right-8 glass rounded-xl p-3 sm:p-4 border border-neon-pink/30"
             >
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 rounded-full bg-neon-pink animate-pulse" />
-                <span className="text-sm text-white">Sam (Guest)</span>
+                <span className="text-xs sm:text-sm text-white">Sam (Guest)</span>
               </div>
             </motion.div>
           </div>

@@ -84,10 +84,10 @@ export default function CreateEpisodePage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
+        className="mb-6 sm:mb-8"
       >
-        <h1 className="text-3xl font-bold text-white mb-2">Create New Episode</h1>
-        <p className="text-gray-400">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Create New Episode</h1>
+        <p className="text-sm sm:text-base text-gray-400">
           Transform your content into an engaging AI podcast
         </p>
       </motion.div>
