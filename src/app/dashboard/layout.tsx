@@ -40,7 +40,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -49,10 +49,10 @@ export default function DashboardLayout({
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - always fixed, visible on desktop, hidden on mobile */}
       <div
         className={`
-          fixed lg:static inset-y-0 left-0 z-50
+          fixed inset-y-0 left-0 z-50
           transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
@@ -60,8 +60,8 @@ export default function DashboardLayout({
         <DashboardSidebar onClose={() => setSidebarOpen(false)} />
       </div>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col lg:ml-64 min-w-0">
+      {/* Main content - with proper margin for fixed sidebar on desktop */}
+      <div className="flex-1 flex flex-col w-full lg:ml-64 min-w-0">
         {/* Mobile header with menu button */}
         <div className="lg:hidden sticky top-0 z-30 glass border-b border-white/10 px-4 py-3 flex items-center justify-between">
           <Button

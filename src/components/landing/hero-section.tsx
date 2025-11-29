@@ -83,7 +83,7 @@ export function HeroSection() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link href="/auth/signup">
+          <Link href="/dashboard">
             <Button variant="neon-solid" size="xl" className="group">
               <Wand2 className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
               Generate Your First Podcast
