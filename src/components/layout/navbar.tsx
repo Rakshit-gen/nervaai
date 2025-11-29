@@ -23,9 +23,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const { user, isAuthenticated, signOut } = useAuthStore()
 
-  const navLinks = [
-    { href: '/', label: 'Home' },
-  ]
+
 
   return (
     <motion.nav
@@ -50,20 +48,7 @@ export function Navbar() {
             <span className="text-xl font-bold gradient-text">Nerva</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-neon-cyan ${
-                  pathname === link.href ? 'text-neon-cyan' : 'text-gray-300'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
@@ -141,56 +126,6 @@ export function Navbar() {
           exit={{ opacity: 0, y: -20 }}
           className="md:hidden glass border-t border-white/10"
         >
-          <div className="px-4 py-4 space-y-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`block px-4 py-2 rounded-lg transition-colors ${
-                  pathname === link.href
-                    ? 'bg-neon-cyan/20 text-neon-cyan'
-                    : 'text-gray-300 hover:bg-white/5'
-                }`}
-                onClick={() => setIsOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <div className="pt-4 border-t border-white/10 space-y-2">
-              {isAuthenticated ? (
-                <>
-                  <Link href="/dashboard" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full">
-                      Dashboard
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    className="w-full text-red-400"
-                    onClick={() => {
-                      signOut()
-                      setIsOpen(false)
-                    }}
-                  >
-                    Sign out
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link href="/auth/signin" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full">
-                      Sign in
-                    </Button>
-                  </Link>
-                  <Link href="/auth/signup" onClick={() => setIsOpen(false)}>
-                    <Button variant="neon-solid" className="w-full">
-                      Get Started
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
         </motion.div>
       )}
     </motion.nav>
