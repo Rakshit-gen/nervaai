@@ -57,7 +57,7 @@ export default function CreateEpisodePage() {
         source_url: wizardData.source_url,
         source_content: wizardData.source_content,
         personas: wizardData.personas || [],
-        generate_cover: wizardData.generate_cover ?? true,
+        generate_cover: false,
       })
 
       toast({

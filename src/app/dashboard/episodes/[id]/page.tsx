@@ -32,15 +32,27 @@ export default function EpisodeDetailPage() {
   const { toast } = useToast()
   const episodeId = params.id as string
 
-  const { currentEpisode, fetchEpisode, pollEpisodeStatus, deleteEpisode, isLoading } = useEpisodeStore()
+  const { currentEpisode, fetchEpisode, pollEpisodeStatus, deleteEpisode, isLoading, error } = useEpisodeStore()
   const [transcript, setTranscript] = useState<string | null>(null)
   const [isPolling, setIsPolling] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   useEffect(() => {
     if (episodeId) {
-      fetchEpisode(episodeId)
+      setFetchError(null)
+      fetchEpisode(episodeId).catch((error) => {
+        console.error('Failed to fetch episode:', error)
+        const errorMessage = error instanceof Error ? error.message : 'Failed to load episode. Please try again later.'
+        setFetchError(errorMessage)
+        toast({
+          title: 'Failed to load episode',
+          description: errorMessage,
+          variant: 'destructive',
+        })
+      })
     }
-  }, [episodeId, fetchEpisode])
+  }, [episodeId, fetchEpisode, toast])
 
   // Poll for status if processing
   useEffect(() => {
@@ -73,6 +85,57 @@ export default function EpisodeDetailPage() {
     }
   }, [currentEpisode?.status, currentEpisode?.id])
 
+  const handleDownload = async () => {
+    if (!currentEpisode) return
+    
+    setIsDownloading(true)
+    try {
+      const audioUrl = api.getAudioUrl(currentEpisode.id)
+      const headers = api.getHeaders()
+      
+      // Convert headers to Record<string, string> for fetch
+      const fetchHeaders: Record<string, string> = {}
+      if (headers && typeof headers === 'object' && !Array.isArray(headers) && !(headers instanceof Headers)) {
+        const headerObj = headers as Record<string, string>
+        if (headerObj['X-User-ID']) fetchHeaders['X-User-ID'] = headerObj['X-User-ID']
+        if (headerObj['Authorization']) fetchHeaders['Authorization'] = headerObj['Authorization']
+      }
+      
+      const response = await fetch(audioUrl, {
+        headers: fetchHeaders,
+      })
+      
+      if (!response.ok) {
+        throw new Error(`Download failed: ${response.status} ${response.statusText}`)
+      }
+      
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${currentEpisode.title.replace(/[^a-z0-9]/gi, '_')}.mp3`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      
+      toast({
+        title: 'Download started',
+        description: 'Your podcast is downloading.',
+        variant: 'success',
+      })
+    } catch (error) {
+      console.error('Download error:', error)
+      toast({
+        title: 'Download failed',
+        description: (error as Error).message || 'Failed to download podcast',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsDownloading(false)
+    }
+  }
+
   const handleDelete = async () => {
     if (!currentEpisode) return
     if (!confirm('Are you sure you want to delete this episode?')) return
@@ -93,7 +156,50 @@ export default function EpisodeDetailPage() {
     }
   }
 
-  if (isLoading || !currentEpisode) {
+  if (isLoading && !currentEpisode && !fetchError) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <RefreshCw className="h-8 w-8 animate-spin text-neon-cyan" />
+      </div>
+    )
+  }
+
+  if (fetchError || (error && !currentEpisode)) {
+    return (
+      <div className="max-w-5xl mx-auto space-y-6">
+        <div className="flex items-center space-x-4">
+          <Link href="/dashboard/episodes">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+        </div>
+        <Card className="neon-border bg-black/50">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-4">
+              <p className="text-red-400">{fetchError || error || 'Failed to load episode'}</p>
+              <Button
+                variant="neon"
+                onClick={() => {
+                  if (episodeId) {
+                    setFetchError(null)
+                    fetchEpisode(episodeId).catch((err) => {
+                      setFetchError(err instanceof Error ? err.message : 'Failed to load episode')
+                    })
+                  }
+                }}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Retry
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (!currentEpisode) {
     return (
       <div className="flex items-center justify-center h-64">
         <RefreshCw className="h-8 w-8 animate-spin text-neon-cyan" />
@@ -138,15 +244,15 @@ export default function EpisodeDetailPage() {
                 <Share2 className="h-4 w-4 mr-2" />
                 Share
               </Button>
-              <a
-                href={api.getAudioUrl(currentEpisode.id)}
-                download
+              <Button 
+                variant="neon" 
+                size="sm"
+                onClick={handleDownload}
+                disabled={isDownloading}
               >
-                <Button variant="neon" size="sm">
-                  <Download className="h-4 w-4 mr-2" />
-                  Download
-                </Button>
-              </a>
+                <Download className="h-4 w-4 mr-2" />
+                {isDownloading ? 'Downloading...' : 'Download'}
+              </Button>
             </>
           )}
           <Button variant="ghost" size="sm" className="text-red-400" onClick={handleDelete}>

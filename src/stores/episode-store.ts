@@ -41,7 +41,7 @@ const initialWizardData: Partial<EpisodeCreateRequest> = {
     { name: 'Alex', role: 'host', personality: 'Friendly and curious' },
     { name: 'Sam', role: 'guest', personality: 'Expert and insightful' },
   ],
-  generate_cover: true,
+  generate_cover: false,
 }
 
 export const useEpisodeStore = create<EpisodeState>((set, get) => ({

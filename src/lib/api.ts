@@ -113,24 +113,42 @@ class ApiClient {
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`
     
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        ...this.getHeaders(),
-        ...options.headers,
-      },
-    })
+    try {
+      // Create abort controller for timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
+      
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          ...this.getHeaders(),
+          ...options.headers,
+        },
+        signal: controller.signal,
+      })
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ detail: 'Request failed' }))
-      throw new Error(error.detail || `HTTP ${response.status}`)
+      clearTimeout(timeoutId)
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ detail: `HTTP ${response.status}: ${response.statusText}` }))
+        throw new Error(error.detail || `HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      if (response.status === 204) {
+        return null as T
+      }
+
+      return response.json()
+    } catch (error) {
+      // Handle network errors, timeouts, etc.
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Network error: Unable to reach the server. Please check your connection.')
+      }
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new Error('Request timeout: The server took too long to respond.')
+      }
+      throw error
     }
-
-    if (response.status === 204) {
-      return null as T
-    }
-
-    return response.json()
   }
 
   // Episodes

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Play, Clock, MoreVertical, Trash2, Download, Eye } from 'lucide-react'
@@ -13,9 +14,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Episode } from '@/lib/api'
+import { Episode, api } from '@/lib/api'
 import { formatDuration, formatRelativeTime, getStatusColor, getStatusBgColor } from '@/lib/utils'
 import { useEpisodeStore } from '@/stores/episode-store'
+import { useToast } from '@/components/ui/use-toast'
 
 interface EpisodeCardProps {
   episode: Episode
@@ -23,6 +25,57 @@ interface EpisodeCardProps {
 
 export function EpisodeCard({ episode }: EpisodeCardProps) {
   const { deleteEpisode } = useEpisodeStore()
+  const { toast } = useToast()
+  const [isDownloading, setIsDownloading] = useState(false)
+
+  const handleDownload = async () => {
+    setIsDownloading(true)
+    try {
+      const audioUrl = api.getAudioUrl(episode.id)
+      const headers = api.getHeaders()
+      
+      // Convert headers to Record<string, string> for fetch
+      const fetchHeaders: Record<string, string> = {}
+      if (headers && typeof headers === 'object' && !Array.isArray(headers) && !(headers instanceof Headers)) {
+        const headerObj = headers as Record<string, string>
+        if (headerObj['X-User-ID']) fetchHeaders['X-User-ID'] = headerObj['X-User-ID']
+        if (headerObj['Authorization']) fetchHeaders['Authorization'] = headerObj['Authorization']
+      }
+      
+      const response = await fetch(audioUrl, {
+        headers: fetchHeaders,
+      })
+      
+      if (!response.ok) {
+        throw new Error(`Download failed: ${response.status} ${response.statusText}`)
+      }
+      
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${episode.title.replace(/[^a-z0-9]/gi, '_')}.mp3`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      
+      toast({
+        title: 'Download started',
+        description: 'Your podcast is downloading.',
+        variant: 'success',
+      })
+    } catch (error) {
+      console.error('Download error:', error)
+      toast({
+        title: 'Download failed',
+        description: (error as Error).message || 'Failed to download podcast',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsDownloading(false)
+    }
+  }
 
   const handleDelete = async () => {
     if (confirm('Are you sure you want to delete this episode?')) {
@@ -68,9 +121,9 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
                   </Link>
                 </DropdownMenuItem>
                 {episode.status === 'completed' && (
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDownload} disabled={isDownloading}>
                     <Download className="mr-2 h-4 w-4" />
-                    Download
+                    {isDownloading ? 'Downloading...' : 'Download'}
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
