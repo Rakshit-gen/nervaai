@@ -19,6 +19,9 @@ interface AuthState {
   setSession: (session: Session | null) => void
 }
 
+// Track if auth listener is already set up to prevent duplicates
+let authListenerSetup = false
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -28,12 +31,13 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
 
       initialize: async () => {
-        try {
-          set({ isLoading: true })
-          
+        // Prevent multiple initializations if already done
+        const currentState = get()
+        if (!currentState.isLoading && authListenerSetup) {
+          // Already initialized, just check session
           const { data: { session } } = await supabase.auth.getSession()
-          
-          if (session?.user) {
+          if (session?.user && !currentState.isAuthenticated) {
+            // Session exists but state wasn't set, update it
             api.setAuth(session.user.id, session.access_token)
             set({
               user: session.user,
@@ -41,29 +45,115 @@ export const useAuthStore = create<AuthState>()(
               isAuthenticated: true,
             })
           }
+          return
+        }
+
+        try {
+          set({ isLoading: true })
           
-          // Listen for auth changes
-          supabase.auth.onAuthStateChange((_event, session) => {
-            if (session?.user) {
+          // Get existing session from Supabase (reads from localStorage)
+          const { data: { session }, error } = await supabase.auth.getSession()
+          
+          if (error) {
+            console.error('Error getting session:', error)
+            // Clear any invalid session
+            await supabase.auth.signOut()
+            set({
+              user: null,
+              session: null,
+              isAuthenticated: false,
+              isLoading: false,
+            })
+            return
+          }
+          
+          if (session?.user) {
+            // Check if session is expired
+            const expiresAt = session.expires_at
+            const now = Math.floor(Date.now() / 1000)
+            
+            if (expiresAt && expiresAt < now) {
+              // Session expired, try to refresh
+              const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession()
+              
+              if (refreshError || !refreshData.session) {
+                // Refresh failed, sign out
+                await supabase.auth.signOut()
+                api.clearAuth()
+                set({
+                  user: null,
+                  session: null,
+                  isAuthenticated: false,
+                  isLoading: false,
+                })
+                return
+              }
+              
+              // Use refreshed session
+              const refreshedSession = refreshData.session
+              api.setAuth(refreshedSession.user.id, refreshedSession.access_token)
+              set({
+                user: refreshedSession.user,
+                session: refreshedSession,
+                isAuthenticated: true,
+                isLoading: false,
+              })
+            } else {
+              // Session is valid
               api.setAuth(session.user.id, session.access_token)
               set({
                 user: session.user,
                 session,
                 isAuthenticated: true,
-              })
-            } else {
-              api.clearAuth()
-              set({
-                user: null,
-                session: null,
-                isAuthenticated: false,
+                isLoading: false,
               })
             }
-          })
+          } else {
+            // No session found
+            api.clearAuth()
+            set({
+              user: null,
+              session: null,
+              isAuthenticated: false,
+              isLoading: false,
+            })
+          }
+          
+          // Set up auth state change listener (only once)
+          // This will handle future auth changes (login, logout, token refresh)
+          if (!authListenerSetup) {
+            supabase.auth.onAuthStateChange(async (event, session) => {
+              console.log('Auth state changed:', event)
+              
+              if (session?.user) {
+                api.setAuth(session.user.id, session.access_token)
+                set({
+                  user: session.user,
+                  session,
+                  isAuthenticated: true,
+                  isLoading: false,
+                })
+              } else {
+                api.clearAuth()
+                set({
+                  user: null,
+                  session: null,
+                  isAuthenticated: false,
+                  isLoading: false,
+                })
+              }
+            })
+            authListenerSetup = true
+          }
         } catch (error) {
           console.error('Auth initialization error:', error)
-        } finally {
-          set({ isLoading: false })
+          api.clearAuth()
+          set({
+            user: null,
+            session: null,
+            isAuthenticated: false,
+            isLoading: false,
+          })
         }
       },
 
