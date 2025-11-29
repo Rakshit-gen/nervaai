@@ -20,9 +20,35 @@ export function formatDate(dateString: string): string {
 }
 
 export function formatRelativeTime(dateString: string): string {
-  const date = new Date(dateString)
+  // Parse the date string - handle both UTC and local timezone formats
+  // If the string doesn't end with 'Z' or timezone offset, assume it's UTC
+  let dateStr = dateString
+  if (!dateStr.endsWith('Z') && !dateStr.match(/[+-]\d{2}:\d{2}$/)) {
+    // If no timezone info, assume UTC and append 'Z'
+    dateStr = dateStr.endsWith('Z') ? dateStr : dateStr + 'Z'
+  }
+  
+  const date = new Date(dateStr)
   const now = new Date()
+  
+  // Validate date
+  if (isNaN(date.getTime())) {
+    console.warn('Invalid date string:', dateString)
+    return 'Recently'
+  }
+  
   const diff = now.getTime() - date.getTime()
+
+  // Handle negative diff (date in future) - should be very small due to clock skew
+  if (diff < 0) {
+    // If negative but less than 1 minute, treat as "just now"
+    if (Math.abs(diff) < 60000) {
+      return 'Just now'
+    }
+    // Otherwise, something is wrong with the date
+    console.warn('Date is in the future:', dateString, 'diff:', diff)
+    return 'Recently'
+  }
 
   const minutes = Math.floor(diff / 60000)
   const hours = Math.floor(diff / 3600000)

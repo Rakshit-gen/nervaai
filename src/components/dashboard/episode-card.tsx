@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Play, Clock, MoreVertical, Trash2, Download, Eye } from 'lucide-react'
+import { Play, Clock, MoreVertical, Trash2, Download, Eye, Share2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -27,6 +27,7 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
   const { deleteEpisode } = useEpisodeStore()
   const { toast } = useToast()
   const [isDownloading, setIsDownloading] = useState(false)
+  const [isSharing, setIsSharing] = useState(false)
 
   const handleDownload = async () => {
     setIsDownloading(true)
@@ -77,6 +78,59 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
     }
   }
 
+  const handleShare = async () => {
+    setIsSharing(true)
+    try {
+      const episodeUrl = `${window.location.origin}/dashboard/episodes/${episode.id}`
+      const shareData = {
+        title: episode.title,
+        text: episode.description || `Check out this podcast: ${episode.title}`,
+        url: episodeUrl,
+      }
+      
+      // Try Web Share API first (mobile and modern browsers)
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData)
+        toast({
+          title: 'Shared successfully',
+          description: 'Episode shared!',
+          variant: 'success',
+        })
+      } else {
+        // Fallback: Copy link to clipboard
+        await navigator.clipboard.writeText(episodeUrl)
+        toast({
+          title: 'Link copied!',
+          description: 'Episode link copied to clipboard.',
+          variant: 'success',
+        })
+      }
+    } catch (error) {
+      // User cancelled share or clipboard failed
+      if ((error as Error).name !== 'AbortError') {
+        console.error('Share error:', error)
+        // Try fallback to clipboard if Web Share API failed
+        try {
+          const episodeUrl = `${window.location.origin}/dashboard/episodes/${episode.id}`
+          await navigator.clipboard.writeText(episodeUrl)
+          toast({
+            title: 'Link copied!',
+            description: 'Episode link copied to clipboard.',
+            variant: 'success',
+          })
+        } catch (clipboardError) {
+          toast({
+            title: 'Share failed',
+            description: 'Unable to share. Please copy the link manually.',
+            variant: 'destructive',
+          })
+        }
+      }
+    } finally {
+      setIsSharing(false)
+    }
+  }
+
   const handleDelete = async () => {
     if (confirm('Are you sure you want to delete this episode?')) {
       await deleteEpisode(episode.id)
@@ -121,10 +175,16 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
                   </Link>
                 </DropdownMenuItem>
                 {episode.status === 'completed' && (
-                  <DropdownMenuItem onClick={handleDownload} disabled={isDownloading}>
-                    <Download className="mr-2 h-4 w-4" />
-                    {isDownloading ? 'Downloading...' : 'Download'}
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem onClick={handleShare} disabled={isSharing}>
+                      <Share2 className="mr-2 h-4 w-4" />
+                      {isSharing ? 'Sharing...' : 'Share'}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleDownload} disabled={isDownloading}>
+                      <Download className="mr-2 h-4 w-4" />
+                      {isDownloading ? 'Downloading...' : 'Download'}
+                    </DropdownMenuItem>
+                  </>
                 )}
                 <DropdownMenuItem
                   className="text-red-400 focus:text-red-400"

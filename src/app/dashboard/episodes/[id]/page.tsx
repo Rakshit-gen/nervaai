@@ -37,6 +37,7 @@ export default function EpisodeDetailPage() {
   const [isPolling, setIsPolling] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [fetchError, setFetchError] = useState<string | null>(null)
+  const [isSharing, setIsSharing] = useState(false)
 
   useEffect(() => {
     if (episodeId) {
@@ -133,6 +134,61 @@ export default function EpisodeDetailPage() {
       })
     } finally {
       setIsDownloading(false)
+    }
+  }
+
+  const handleShare = async () => {
+    if (!currentEpisode) return
+    
+    setIsSharing(true)
+    try {
+      const episodeUrl = `${window.location.origin}/dashboard/episodes/${currentEpisode.id}`
+      const shareData = {
+        title: currentEpisode.title,
+        text: currentEpisode.description || `Check out this podcast: ${currentEpisode.title}`,
+        url: episodeUrl,
+      }
+      
+      // Try Web Share API first (mobile and modern browsers)
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData)
+        toast({
+          title: 'Shared successfully',
+          description: 'Episode shared!',
+          variant: 'success',
+        })
+      } else {
+        // Fallback: Copy link to clipboard
+        await navigator.clipboard.writeText(episodeUrl)
+        toast({
+          title: 'Link copied!',
+          description: 'Episode link copied to clipboard.',
+          variant: 'success',
+        })
+      }
+    } catch (error) {
+      // User cancelled share or clipboard failed
+      if ((error as Error).name !== 'AbortError') {
+        console.error('Share error:', error)
+        // Try fallback to clipboard if Web Share API failed
+        try {
+          const episodeUrl = `${window.location.origin}/dashboard/episodes/${currentEpisode.id}`
+          await navigator.clipboard.writeText(episodeUrl)
+          toast({
+            title: 'Link copied!',
+            description: 'Episode link copied to clipboard.',
+            variant: 'success',
+          })
+        } catch (clipboardError) {
+          toast({
+            title: 'Share failed',
+            description: 'Unable to share. Please copy the link manually.',
+            variant: 'destructive',
+          })
+        }
+      }
+    } finally {
+      setIsSharing(false)
     }
   }
 
@@ -240,9 +296,14 @@ export default function EpisodeDetailPage() {
         <div className="flex items-center space-x-2">
           {currentEpisode.status === 'completed' && (
             <>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleShare}
+                disabled={isSharing}
+              >
                 <Share2 className="h-4 w-4 mr-2" />
-                Share
+                {isSharing ? 'Sharing...' : 'Share'}
               </Button>
               <Button 
                 variant="neon" 
