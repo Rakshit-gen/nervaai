@@ -8,7 +8,6 @@ import {
   Plus,
   Library,
   Settings,
-  HelpCircle,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -78,21 +77,6 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
         })}
       </nav>
 
-      {/* Help section */}
-      <div className="p-4 border-t border-white/10">
-        <div className="neon-border rounded-lg p-4 bg-black/50">
-          <div className="flex items-center space-x-3 mb-3">
-            <HelpCircle className="h-5 w-5 text-neon-cyan" />
-            <span className="text-sm font-medium text-white">Need help?</span>
-          </div>
-          <p className="text-xs text-gray-400 mb-3">
-            Check our documentation or contact support.
-          </p>
-          <Button variant="outline" size="sm" className="w-full">
-            View Docs
-          </Button>
-        </div>
-      </div>
     </div>
   )
 }
