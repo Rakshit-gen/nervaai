@@ -30,6 +30,7 @@ export function Footer() {
         <div className="mt-8 pt-8 border-t border-white/10 text-center">
           <p className="text-sm text-gray-400">
             © {new Date().getFullYear()} Nerva. All rights reserved.
+            Created by <Link href="https://github.com/rakshit-gen" target="_blank" className="gradient-text hover:underline cursor-pointer">Rakshit Sisodiya</Link>
           </p>
         </div>
       </div>
