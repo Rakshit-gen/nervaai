@@ -86,6 +86,25 @@ export default function EpisodeDetailPage() {
     }
   }, [currentEpisode?.status, currentEpisode?.id])
 
+  // Stop audio when navigating away or episode changes
+  useEffect(() => {
+    return () => {
+      // Stop any playing audio when component unmounts or episode changes
+      // This ensures audio stops when navigating away
+      const audioElements = document.querySelectorAll('audio')
+      audioElements.forEach(audio => {
+        audio.pause()
+        audio.currentTime = 0
+      })
+      
+      // Also stop any Web Audio API contexts that might be playing
+      if (window.AudioContext || (window as any).webkitAudioContext) {
+        // WaveSurfer uses Web Audio API, but it's cleaned up in the component
+        // This is just an extra safety measure
+      }
+    }
+  }, [episodeId])
+
   const handleDownload = async () => {
     if (!currentEpisode) return
     

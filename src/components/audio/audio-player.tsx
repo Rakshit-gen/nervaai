@@ -92,13 +92,83 @@ export function AudioPlayer({ audioUrl, title, coverUrl }: AudioPlayerProps) {
     wavesurferRef.current = wavesurfer
 
     return () => {
-      wavesurfer.destroy()
+      // Stop and pause audio before destroying
+      try {
+        if (wavesurfer.isPlaying()) {
+          wavesurfer.pause()
+        }
+        wavesurfer.stop()
+      } catch (error) {
+        console.error('Error stopping audio:', error)
+      }
+      
+      // Destroy wavesurfer instance
+      try {
+        wavesurfer.destroy()
+      } catch (error) {
+        console.error('Error destroying wavesurfer:', error)
+      }
+      
+      // Clean up object URL
       if (objectUrlRef.current) {
         URL.revokeObjectURL(objectUrlRef.current)
         objectUrlRef.current = null
       }
+      
+      wavesurferRef.current = null
     }
   }, [audioUrl])
+
+  // Stop audio when component unmounts or page is about to unload
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (wavesurferRef.current) {
+        try {
+          if (wavesurferRef.current.isPlaying()) {
+            wavesurferRef.current.pause()
+          }
+          wavesurferRef.current.stop()
+        } catch (error) {
+          console.error('Error stopping audio on page unload:', error)
+        }
+      }
+    }
+
+    // Stop audio when page is about to unload
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    
+    // Also stop on visibility change (tab switch, etc.)
+    const handleVisibilityChange = () => {
+      if (document.hidden && wavesurferRef.current) {
+        try {
+          if (wavesurferRef.current.isPlaying()) {
+            wavesurferRef.current.pause()
+          }
+        } catch (error) {
+          console.error('Error pausing audio on visibility change:', error)
+        }
+      }
+    }
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      
+      // Final cleanup - ensure audio is stopped
+      if (wavesurferRef.current) {
+        try {
+          if (wavesurferRef.current.isPlaying()) {
+            wavesurferRef.current.pause()
+          }
+          wavesurferRef.current.stop()
+        } catch (error) {
+          console.error('Error stopping audio on cleanup:', error)
+        }
+      }
+    }
+  }, [])
 
   const togglePlay = useCallback(() => {
     if (wavesurferRef.current) {
