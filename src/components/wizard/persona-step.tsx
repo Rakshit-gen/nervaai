@@ -22,15 +22,40 @@ import { Persona } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
 const archetypes = [
-  { id: 'curious', label: 'Curious Explorer', description: 'Asks questions, seeks understanding' },
-  { id: 'expert', label: 'Subject Expert', description: 'Provides deep insights and knowledge' },
-  { id: 'storyteller', label: 'Storyteller', description: 'Weaves narratives and examples' },
-  { id: 'skeptic', label: 'Thoughtful Skeptic', description: 'Challenges assumptions constructively' },
-  { id: 'enthusiast', label: 'Enthusiast', description: 'Brings energy and excitement' },
-  { id: 'analyst', label: 'Analyst', description: 'Breaks down complex topics' },
+  { 
+    id: 'curious', 
+    label: 'Curious Explorer', 
+    description: 'Asks thoughtful questions and seeks deeper understanding. Speaks with genuine interest and uses phrases like "That\'s fascinating!" and "Can you tell me more about that?" Uses a warm, engaging tone.' 
+  },
+  { 
+    id: 'expert', 
+    label: 'Subject Expert', 
+    description: 'Provides deep insights and knowledge with confidence. Speaks clearly and uses professional terminology when appropriate, but makes complex topics accessible. Uses phrases like "Based on my research..." and "What\'s interesting is..."' 
+  },
+  { 
+    id: 'storyteller', 
+    label: 'Storyteller', 
+    description: 'Weaves narratives and examples into the conversation. Speaks with vivid descriptions and uses phrases like "Let me share a story..." and "Imagine this scenario..." Uses expressive language and varied pacing.' 
+  },
+  { 
+    id: 'skeptic', 
+    label: 'Thoughtful Skeptic', 
+    description: 'Challenges assumptions constructively and asks probing questions. Speaks with measured skepticism and uses phrases like "But wait, what about..." and "I\'m not sure I agree because..." Uses logical reasoning and respectful disagreement.' 
+  },
+  { 
+    id: 'enthusiast', 
+    label: 'Enthusiast', 
+    description: 'Brings energy and excitement to the conversation. Speaks with high energy and uses phrases like "This is amazing!" and "I love this!" Uses upbeat tone and frequent positive affirmations.' 
+  },
+  { 
+    id: 'analyst', 
+    label: 'Analyst', 
+    description: 'Breaks down complex topics systematically. Speaks methodically and uses phrases like "Let\'s break this down..." and "The key factors are..." Uses structured explanations and clear transitions.' 
+  },
 ]
 
 const roles = ['host', 'guest', 'narrator']
+const genders = ['male', 'female', 'neutral']
 
 interface PersonaStepProps {
   onNext: () => void
@@ -41,8 +66,8 @@ export function PersonaStep({ onNext, onBack }: PersonaStepProps) {
   const { wizardData, updateWizardData } = useEpisodeStore()
   const [personas, setPersonas] = useState<Persona[]>(
     wizardData.personas || [
-      { name: 'Alex', role: 'host', personality: 'Friendly and curious' },
-      { name: 'Sam', role: 'guest', personality: 'Expert and insightful' },
+      { name: 'Alex', role: 'host', gender: 'male', personality: 'Friendly and curious, speaks with enthusiasm and asks thoughtful questions. Uses casual language and occasional humor.' },
+      { name: 'Sam', role: 'guest', gender: 'female', personality: 'Expert and insightful, provides deep analysis with clear explanations. Speaks confidently and uses professional yet accessible language.' },
     ]
   )
   const [error, setError] = useState('')
@@ -54,7 +79,7 @@ export function PersonaStep({ onNext, onBack }: PersonaStepProps) {
     }
     setPersonas([
       ...personas,
-      { name: '', role: 'guest', personality: '' },
+      { name: '', role: 'guest', gender: 'male', personality: '' },
     ])
     setError('')
   }
@@ -189,6 +214,26 @@ export function PersonaStep({ onNext, onBack }: PersonaStepProps) {
                   </Select>
                 </div>
 
+                {/* Gender */}
+                <div className="space-y-2">
+                  <Label>Voice Gender</Label>
+                  <Select
+                    value={persona.gender || 'male'}
+                    onValueChange={(value) => updatePersona(index, 'gender', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {genders.map(gender => (
+                        <SelectItem key={gender} value={gender}>
+                          {gender.charAt(0).toUpperCase() + gender.slice(1)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 {/* Archetype quick select */}
                 <div className="space-y-2 md:col-span-2">
                   <Label>Quick Archetype</Label>
@@ -209,13 +254,17 @@ export function PersonaStep({ onNext, onBack }: PersonaStepProps) {
 
                 {/* Personality */}
                 <div className="space-y-2 md:col-span-2">
-                  <Label>Personality Description</Label>
+                  <Label>Personality & Speaking Style</Label>
                   <Textarea
-                    placeholder="Describe the personality and speaking style..."
+                    placeholder="Describe personality traits, speaking style, tone, and typical phrases. Example: Friendly and curious, speaks with enthusiasm and asks thoughtful questions. Uses casual language and occasional humor. Often says things like 'That's interesting!' and 'Tell me more about that.'"
                     value={persona.personality || ''}
                     onChange={(e) => updatePersona(index, 'personality', e.target.value)}
-                    rows={2}
+                    rows={3}
+                    className="resize-none"
                   />
+                  <p className="text-xs text-gray-500">
+                    Be specific! Include speaking patterns, tone, and example phrases to make characters more distinct.
+                  </p>
                 </div>
               </div>
             </CardContent>
