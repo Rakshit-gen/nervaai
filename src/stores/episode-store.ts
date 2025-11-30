@@ -38,8 +38,8 @@ const initialWizardData: Partial<EpisodeCreateRequest> = {
   source_type: 'text',
   source_content: '',
   personas: [
-    { name: 'Alex', role: 'host', gender: 'male', personality: 'Friendly and curious, speaks with enthusiasm and asks thoughtful questions. Uses casual language and occasional humor.' },
-    { name: 'Sam', role: 'guest', gender: 'female', personality: 'Expert and insightful, provides deep analysis with clear explanations. Speaks confidently and uses professional yet accessible language.' },
+    { name: 'Alex', role: 'host', personality: 'Friendly and curious' },
+    { name: 'Sam', role: 'guest', personality: 'Expert and insightful' },
   ],
   generate_cover: false,
 }

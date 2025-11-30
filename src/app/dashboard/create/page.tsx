@@ -56,7 +56,6 @@ export default function CreateEpisodePage() {
         source_type: wizardData.source_type!,
         source_url: wizardData.source_url,
         source_content: wizardData.source_content,
-        language: wizardData.language || 'en',
         personas: wizardData.personas || [],
         generate_cover: false,
       })

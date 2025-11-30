@@ -3,7 +3,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1
 export interface Persona {
   name: string
   role: string
-  gender?: string
   voice_id?: string
   personality?: string
 }
@@ -14,7 +13,6 @@ export interface EpisodeCreateRequest {
   source_type: 'pdf' | 'text' | 'youtube' | 'url'
   source_url?: string
   source_content?: string
-  language?: string
   personas: Persona[]
   generate_cover?: boolean
 }
