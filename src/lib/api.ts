@@ -14,6 +14,7 @@ export interface EpisodeCreateRequest {
   source_type: 'pdf' | 'text' | 'youtube' | 'url'
   source_url?: string
   source_content?: string
+  language?: string
   personas: Persona[]
   generate_cover?: boolean
 }
