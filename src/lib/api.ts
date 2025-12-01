@@ -10,7 +10,7 @@ export interface Persona {
 export interface EpisodeCreateRequest {
   title: string
   description?: string
-  source_type: 'pdf' | 'text' | 'youtube' | 'url'
+  source_type: 'text'
   source_url?: string
   source_content?: string
   personas: Persona[]
